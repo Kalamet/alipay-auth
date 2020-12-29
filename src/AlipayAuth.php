@@ -12,6 +12,8 @@ use Alipay\EasySDK\Kernel\Config;
 use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Kernel\Util\ResponseChecker;
 use Alipay\EasySDK\Member\Identification\Models\IdentityParam;
+use Alipay\EasySDK\Member\Identification\Models\MerchantConfig;
+
 class AlipayAuth
 {
     public function getOptions()
@@ -37,7 +39,9 @@ class AlipayAuth
         $identityParam->certNo = $cert_no;
         $config = $this->getOptions();
         Factory::setOptions($config);
-        $result = Factory::member()->identification()->init($outerOrderNo, $bizCode, $identityParam, $config);
+        $merchant_config = new MerchantConfig();
+        $merchant_config->returnUrl = '';
+        $result = Factory::member()->identification()->init($outerOrderNo, $bizCode, $identityParam, $merchant_config);
         $response_check = new ResponseChecker();
         if ($response_check->success($result)) {
             $certifyId = $result->certifyId;
